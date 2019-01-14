@@ -1,0 +1,115 @@
+int led1 = 9;
+int led2 = 10;
+int led3 = 11;
+int led4 = 12;
+int led5 = 13;
+
+int k1 = 49;
+int k2 = 50;
+int k3 = 51;
+int k4 = 52;
+int k5 = 53;
+
+int pinA = 2;
+int pinB = 3;
+int pinC = 4;
+int pinD = 5;
+int pinE = 6;
+int pinF = 7;
+int pinG = 8;
+
+int volume;
+
+void setup(){
+  Serial.begin(9600);
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+  pinMode(led5, OUTPUT);
+
+  pinMode(pinA, OUTPUT);
+  pinMode(pinB, OUTPUT);
+  pinMode(pinC, OUTPUT);
+  pinMode(pinD, OUTPUT);
+  pinMode(pinE, OUTPUT);
+  pinMode(pinF, OUTPUT);
+  pinMode(pinG, OUTPUT);
+}
+
+void loop(){
+  volume = analogRead(A0);
+
+  if(volume >= k1){
+    digitalWrite(led1, HIGH);
+    digitalWrite(pinA, LOW);  
+    digitalWrite(pinB, HIGH);
+    digitalWrite(pinC, HIGH);
+    digitalWrite(pinD, LOW);
+    digitalWrite(pinE, LOW);
+    digitalWrite(pinF, LOW);
+    digitalWrite(pinG, LOW);
+  }
+  else{
+    digitalWrite(led1, LOW);
+  }
+  if(volume>k2){
+    digitalWrite(led2, HIGH);
+    digitalWrite(pinA, HIGH);  
+    digitalWrite(pinB, HIGH);
+    digitalWrite(pinC, LOW);
+    digitalWrite(pinD, HIGH);
+    digitalWrite(pinE, HIGH);
+    digitalWrite(pinF, LOW);
+    digitalWrite(pinG, HIGH);
+  }
+  else{
+    digitalWrite(led2, LOW);
+  }
+  if(volume>k3){
+    digitalWrite(led3, HIGH);
+    digitalWrite(pinA, HIGH);  
+    digitalWrite(pinB, HIGH);
+    digitalWrite(pinC, HIGH);
+    digitalWrite(pinD, HIGH);
+    digitalWrite(pinE, LOW);
+    digitalWrite(pinF, LOW);
+    digitalWrite(pinG, HIGH);
+  }
+  else{
+    digitalWrite(led3, LOW);
+  }
+  if(volume>k4){
+    digitalWrite(led4, HIGH);
+    digitalWrite(pinA, LOW);  
+    digitalWrite(pinB, HIGH);
+    digitalWrite(pinC, HIGH);
+    digitalWrite(pinD, LOW);
+    digitalWrite(pinE, LOW);
+    digitalWrite(pinF, HIGH);
+    digitalWrite(pinG, HIGH);
+    
+  }
+  else{
+    digitalWrite(led4, LOW);
+  }
+  if(volume>k5){
+    digitalWrite(led5, HIGH);
+    digitalWrite(pinA, HIGH);  
+    digitalWrite(pinB, LOW);
+    digitalWrite(pinC, HIGH);
+    digitalWrite(pinD, HIGH);
+    digitalWrite(pinE, LOW);
+    digitalWrite(pinF, HIGH);
+    digitalWrite(pinG, HIGH);
+    
+  }
+  else{
+    digitalWrite(led5, LOW);
+  }
+
+
+  
+  Serial.println(volume);
+  }
+
