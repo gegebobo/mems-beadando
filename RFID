@@ -1,0 +1,140 @@
+#include <SPI.h>
+#include <MFRC522.h>
+#include <Servo.h>
+
+Servo daServo;
+
+#define szervomotor 5
+
+#define RST_PIN         9
+
+#define SS_1_PIN        10
+
+#define NR_OF_READERS  1
+
+byte ssPins[] = {SS_1_PIN};
+
+MFRC522 mfrc522[NR_OF_READERS];
+
+int a = 0;
+int nyti = 2000;  //nyitva tartási idő
+int szme = 150;   //szervómotor elfordulása
+
+int b1 = 0x3E;
+int b2 = 0xDC;
+int b3 = 0x91;
+int b4 = 0x98;
+
+int pirosLED = 2;
+int zoldLED = 3;
+int sargaLED = 4;
+
+
+
+void setup() {
+
+  Serial.begin(115200);
+
+  daServo.attach(szervomotor);
+  servo(50);
+
+  pinMode(pirosLED, OUTPUT);
+  pinMode(zoldLED, OUTPUT);
+  pinMode(sargaLED, OUTPUT);
+
+  digitalWrite(pirosLED, LOW);
+  digitalWrite(zoldLED, LOW);
+  digitalWrite(sargaLED, HIGH);
+
+  SPI.begin();
+
+  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++)
+  {
+    mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
+  }
+  
+}
+
+void loop()
+{
+  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++)
+
+  {
+
+    if (mfrc522[reader].PICC_IsNewCardPresent() && mfrc522[reader].PICC_ReadCardSerial())
+    {
+     
+      MFRC522::PICC_Type piccType = mfrc522[reader].PICC_GetType(mfrc522[reader].uid.sak);
+      
+
+      if (mfrc522[reader].uid.uidByte[0] == b1 &
+          mfrc522[reader].uid.uidByte[1] == b2 &
+          mfrc522[reader].uid.uidByte[2] == b3 &
+          mfrc522[reader].uid.uidByte[3] == b4 &
+          reader == 0 )
+      {
+        digitalWrite(zoldLED, HIGH);
+        digitalWrite(sargaLED, LOW);
+        delay(1000);
+        digitalWrite(zoldLED, LOW);
+        digitalWrite(sargaLED, HIGH);
+        
+        a++;
+        
+      }
+      
+      else if(mfrc522[reader].uid.uidByte[0] == 0x2E &
+              mfrc522[reader].uid.uidByte[1] == 0xC2 &
+              mfrc522[reader].uid.uidByte[2] == 0x60 &
+              mfrc522[reader].uid.uidByte[3] == 0xCE &
+              reader == 0){
+        digitalWrite(zoldLED, HIGH);
+        digitalWrite(sargaLED, LOW);
+        delay(1000);
+        digitalWrite(zoldLED, LOW);
+        digitalWrite(sargaLED, HIGH);
+        
+        a++;
+        
+      }
+      else {
+        
+        digitalWrite(pirosLED, HIGH);
+        digitalWrite(sargaLED, LOW);
+        delay(1000);
+        digitalWrite(pirosLED, LOW);
+        digitalWrite(sargaLED, HIGH);
+        
+        a = 0;
+       
+      }
+
+
+      
+
+      mfrc522[reader].PICC_HaltA();
+      mfrc522[reader].PCD_StopCrypto1();
+    }
+  }
+
+  if (a > 0)
+  {
+    servo(szme);
+    
+    delay(nyti);
+    servo(50);
+    
+    a = 0;
+  }
+
+}
+
+
+
+///////////////////////////////SZERVÓ//////////////////////////////////////
+void servo(int datPos)
+{
+  daServo.write(datPos);
+  
+  delay(15);
+}
